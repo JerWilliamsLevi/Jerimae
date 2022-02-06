@@ -1,2 +1,1 @@
-# Jerimae
-Arduino Code for NASA Psyche Project
+# Arduino Code for NASA Psyche Project

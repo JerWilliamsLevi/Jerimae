@@ -15,7 +15,6 @@
 //
 //        Analog
 //        Serial
-
 #include "FastLED.h"
 
 // Number of LEDs in light strip
@@ -43,14 +42,14 @@ CRGB leds7[NUM_LEDS7];
 
 void setup() {
      
-     pinMode(5,  INPUT);   // hard switch that might be removed later
+     pinMode(2,  INPUT);   // hard switch that might be removed later
      
      pinMode(8,  INPUT);   // GPIO pins from Computer science team
      pinMode(9,  INPUT);
      pinMode(10, INPUT);
      pinMode(11, INPUT);
      
-     FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3); // Functions for individual light strips
+     FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3);
      FastLED.addLeds<NEOPIXEL, DATA_PIN4>(leds4, NUM_LEDS4);
      FastLED.addLeds<NEOPIXEL, DATA_PIN5>(leds5, NUM_LEDS5);
      FastLED.addLeds<NEOPIXEL, DATA_PIN6>(leds6, NUM_LEDS6);
@@ -58,7 +57,6 @@ void setup() {
 }
 
 int switch1=0;
-int x = 0;
 
 void loop() {
   
@@ -69,18 +67,18 @@ void loop() {
      int Bit3 = digitalRead(11);
      int DisplayMode = 0;           // Set to 0 for testing code
      
-     // Light all stands in white for testing
+     // Light all strands in for testing
      if(DisplayMode == 0){
-          leds3[x++] = CRGB::White;
-          FastLED.show();
-          leds4[x++] = CRGB::Green;
-          FastLED.show();
-          leds5[x++] = CRGB::Blue;
-          FastLED.show();
-          leds6[x++] = CRGB::Red;
-          FastLED.show();
-          leds7[x++] = CRGB::Black;
-          FastLED.show();
+          int x = 0;
+          while(x<50){
+                leds3[x] = CRGB::White;
+                leds4[x] = CRGB::Green;
+                leds5[x] = CRGB::Blue;
+                leds6[x] = CRGB::Red;
+                leds7[x] = CRGB::Black;
+                FastLED.show();
+                x=x+1;
+          }
      }
      
      // Light all strands off for testing

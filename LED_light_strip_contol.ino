@@ -1,3 +1,21 @@
+//   ELEGOO PIN LAYOUT
+//        Digital
+// Digital PIN 0 = Logic 0
+// Digital PIN 1 = Logic 1
+// Digital PIN 2 = Hard Switch that might be removed later
+// Digital PIN 3 = Led Light Strip 1
+// Digital PIN 4 = Led Light Strip 2
+// Digital PIN 5 = Led Light Strip 3
+// Digital PIN 6 = Led Light Strip 4
+// Digital PIN 7 = Led Light Strip 5
+// Digital PIN 8 = GPIO bit 0
+// Digital PIN 9 = GPIO bit 1
+// Digital PIN 10= GPIO bit 2
+// Digital PIN 11= GPIO bit 3
+//
+//        Analog
+//        Serial
+
 #include "FastLED.h"
 
 // Number of LEDs in light strip
@@ -32,7 +50,7 @@ void setup() {
      pinMode(10, INPUT);
      pinMode(11, INPUT);
      
-     FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3);
+     FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3); // Functions for individual light strips
      FastLED.addLeds<NEOPIXEL, DATA_PIN4>(leds4, NUM_LEDS4);
      FastLED.addLeds<NEOPIXEL, DATA_PIN5>(leds5, NUM_LEDS5);
      FastLED.addLeds<NEOPIXEL, DATA_PIN6>(leds6, NUM_LEDS6);

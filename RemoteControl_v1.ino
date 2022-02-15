@@ -23,20 +23,40 @@ const byte BIT_3_in = 13;   // MSB
 //const byte BIT_2_out = ;   
 //const byte BIT_3_out = ;   // MSB
 
+// define ACK
+const byte ACK = 11111111;
+
 // IR serial communication
 const byte IR_RX_in = 3;    // Arduino Pin for receive, requires change interrupt support
 const byte IR_TX_out = 5;   // Arduino Pin for transmit 
 const int IR_BAUD = 9600;   // Tx & Rx rate
 //const byte RESEND_MAX = 3;   // Max number of times to resend a byte
-//const int TIMEOUT = 500;    // Time in milliseconds to wait for an ACK
+const int TIMEOUT = 500;    // Time in milliseconds to wait for an ACK
   
 // Set up a software serial instance
 SoftwareSerial IR(IR_RX_in, IR_TX_out);
 
 // Variable Declarations
 bool button_flag = false; // 1 if a button is depressed, 0 after released
-byte tx_data = 0; // 4 bits replicated
-//byte rx_data;
+bool ACK_flag = false; // if a valid ACK is received
+byte tx_data = 0; // 4 bits duplicated = 1 byte
+byte rx_data = 0; // what's received
+
+// counters to know if we need to resend
+int resend_count = 0;
+int timeout_count = 0;
+
+// to hold received bits for error check
+bool bit0 = 0; 
+bool bit1 = 0; 
+bool bit2 = 0; 
+bool bit3 = 0; 
+
+bool bit4 = 0; 
+bool bit5 = 0; 
+bool bit6 = 0; 
+bool bit7 = 0; 
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -63,11 +83,10 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  int resend_count = 0;
-  int timout_count = 0;
+
   
   IR.listen();
-  //if ( IR.isListening() ) {
+  if ( IR.isListening() ) {
 
     // GS_in HIGH when a button is pressed, read encoder bits
     if (GS_in) {
@@ -89,28 +108,60 @@ void loop() {
 
     // Once button has been released
     if ( GS_in==0 && button_flag==1 ) {
+
+      ACK_flag = false; // so we know to wait on an ACK
+      
       // send to IR pin (serial)
       IR.print(tx_data); // send it
       Serial.println("tx data sent, value: " + tx_data);
   
       // Wait while no ACK and timeout_count < TIMEOUT
+      // make sure we don't block ourselves waiting on ACKs here
+      // means we need to be able to receive & process data while waiting
+      // while ( ACK_flag == false && timeout_count < TIMEOUT ) {
+      // }
       // after timeout, if no ACK and resend_count < max, resend
+      // reset resend
       // If count >= max OR ACK good, set flag and move on
+      // if 
 
       button_flag = false; // we're done with that button press, good job!
-    
-  }
 
-  // If IR receive, read byte
-  if ( IR.available() ) {
-    //read_byte IR.read();
-    
+    }
+
+    // If IR receive, read byte
+    if ( IR.available() ) {
+      rx_data = IR.read();
+      Serial.println("data received, value: " + rx_data);
+      bit0 = bitRead(rx_data, 0);
+      bit1 = bitRead(rx_data, 1);
+      bit2 = bitRead(rx_data, 2);
+      bit3 = bitRead(rx_data, 3);
+      
+      bit4 = bitRead(rx_data, 4);
+      bit5 = bitRead(rx_data, 5);
+      bit6 = bitRead(rx_data, 6);
+      bit7 = bitRead(rx_data, 7);
+    }
+      // Bitwise XOR == False for each set, means bits match, declare it good
+      if ( !(bit0^bit4) && !(bit1^bit5) && !(bit2^bit6) && !(bit3^bit7) ) {
+        // If all bits are 1, you have an ACK, set ACK_flag
+        if ( bit0==1 && bit1==1 && bit2==1 && bit3==1) {
+          ACK_flag = true;
+        }
+        // If all bits are 0, well, they shouldn't be at this time so do nothing
+        
+        // otherwise, you have received a valid transmission
+        // Send ACK
+        IR.print(ACK);
+        Serial.println("data valid, ACK sent");
+        
+        // for the remote side, illuminate a light on remote
+        // output to a decoder
+        
+        // for the main controller side, ? change lights on model ?
+
+      }
+      // Else do nothing
   }
-    // Bitwise XOR == False for each set, means bits match, declare it good
-    //if ( !(bit0^bit4) && !(bit1^bit5) && !(bit2^bit6) && !(bit3^bit7) ) {
-      // Send ACK
-    //}
-    // Else do nothing
-  //}
-  //}
 }

@@ -74,7 +74,7 @@ void loop() {
      // IR remote read
      if (irrecv.decode(&results)){    // Read Remote Values
           remote = (results.value);
-          Serial.println(remote);
+          //Serial.println(remote);
           irrecv.resume(); 
      //      IR remote decode
      // remote 0 = 26775
@@ -93,10 +93,11 @@ void loop() {
            int Bit1 = digitalRead(9);
            int Bit2 = digitalRead(10);
            int Bit3 = digitalRead(11);
-           int DisplayMode = 0;           // Set to 0 for testing code
-           
+           //int DisplayMode = 0;           // Set to 0 for testing code
+           int DisplayMode = remote;
+           Serial.println(remote);
            // Light all strands in for testing
-           if(DisplayMode == 0 || remote = 26775){
+           if(DisplayMode == 26775){
                 int x = 0;
                 while(x<50){
                       leds3[x] = CRGB::Black;
@@ -110,7 +111,7 @@ void loop() {
            }
            
            // Light all strands off for testing
-           else if(DisplayMode == 1 || remote == 12495){
+           else if(DisplayMode == 12495){
                  int x = 0;
                       while(x<50){
                             leds3[x] = CRGB::White;
@@ -118,7 +119,7 @@ void loop() {
                             leds5[x] = CRGB::Blue;
                             leds6[x] = CRGB::Red;
                             leds7[x] = CRGB::Black;
-                             FastLED.show();
+                            FastLED.show();
                       x=x+1;
                 }
            }

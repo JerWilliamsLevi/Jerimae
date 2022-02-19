@@ -3,7 +3,7 @@
 // Remote Control Side
 
 // Written by Cecilia Delcamp
-// Version 1, Last Update 02/14/2022
+// Version 1, Last Update 02/17/2022
 // Written for use on an Arduino Pro Mini 3.3 V, 8 MHz board
 
 // Libraries Used:
@@ -24,7 +24,7 @@ const byte BIT_3_in = 13;   // MSB
 //const byte BIT_3_out = ;   // MSB
 
 // define ACK
-const byte ACK = 11111111;
+const byte ACK = 0b11111111;
 
 // IR serial communication
 const byte IR_RX_in = 3;    // Arduino Pin for receive, requires change interrupt support
@@ -77,6 +77,7 @@ void setup() {
   Serial.begin(9600);
   // Serial print (status & troubleshooting)
   Serial.println("End of void setup()");
+Serial.print("test print value = "); Serial.print("3");
 
 }
 
@@ -85,11 +86,10 @@ void loop() {
 
 
   
-  IR.listen();
-  if ( IR.isListening() ) {
-
+  //IR.listen();
+  //if ( IR.isListening() ) {
     // GS_in HIGH when a button is pressed, read encoder bits
-    if (GS_in) {
+    if (digitalRead(GS_in)==1) {
     
       button_flag = true; // a button has been pressed
     
@@ -104,17 +104,22 @@ void loop() {
       bitWrite( tx_data, 5, digitalRead(BIT_1_in) ); // bit 1 of data confirm
       bitWrite( tx_data, 6, digitalRead(BIT_2_in) ); // bit 2 of data confirm
       bitWrite( tx_data, 7, digitalRead(BIT_3_in) ); // bit 3 of data confirm
+      //Serial.print("data byte: ");Serial.print(tx_data);
     }    
 
     // Once button has been released
-    if ( GS_in==0 && button_flag==1 ) {
-
+    if ( digitalRead(GS_in)==0 && button_flag==true ) {
       ACK_flag = false; // so we know to wait on an ACK
       
       // send to IR pin (serial)
-      IR.print(tx_data); // send it
-      Serial.println("tx data sent, value: " + tx_data);
-  
+      IR.write(tx_data); // send it
+      Serial.print("tx data sent, value: ");Serial.print(tx_data);
+
+// 2/17 tested - it does think that it is printing, and (apart from shaky connections)
+//  ... the values look valid. Haven't yet confirmed that it is in fact sending, or if
+//  ... this is the best way or not to use the IR. 
+// Next: check that a serial write to an IR results in a data that can be received.
+
       // Wait while no ACK and timeout_count < TIMEOUT
       // make sure we don't block ourselves waiting on ACKs here
       // means we need to be able to receive & process data while waiting
@@ -126,42 +131,45 @@ void loop() {
       // if 
 
       button_flag = false; // we're done with that button press, good job!
-
-    }
-
+    
+    
     // If IR receive, read byte
-    if ( IR.available() ) {
-      rx_data = IR.read();
-      Serial.println("data received, value: " + rx_data);
-      bit0 = bitRead(rx_data, 0);
-      bit1 = bitRead(rx_data, 1);
-      bit2 = bitRead(rx_data, 2);
-      bit3 = bitRead(rx_data, 3);
+    //if ( IR.available() ) {
+    //  rx_data = IR.read();
+    //  Serial.println("data received, value: " + rx_data);
+    //  bit0 = bitRead(rx_data, 0);
+    //  bit1 = bitRead(rx_data, 1);
+    //  bit2 = bitRead(rx_data, 2);
+    //  bit3 = bitRead(rx_data, 3);
       
-      bit4 = bitRead(rx_data, 4);
-      bit5 = bitRead(rx_data, 5);
-      bit6 = bitRead(rx_data, 6);
-      bit7 = bitRead(rx_data, 7);
-    }
-      // Bitwise XOR == False for each set, means bits match, declare it good
-      if ( !(bit0^bit4) && !(bit1^bit5) && !(bit2^bit6) && !(bit3^bit7) ) {
+    //  bit4 = bitRead(rx_data, 4);
+    //  bit5 = bitRead(rx_data, 5);
+    //  bit6 = bitRead(rx_data, 6);
+    //  bit7 = bitRead(rx_data, 7);
+    
+    // Bitwise XOR == False for each set, means bits match, declare it good
+    //     if ( !(bit0^bit4) && !(bit1^bit5) && !(bit2^bit6) && !(bit3^bit7) ) {
         // If all bits are 1, you have an ACK, set ACK_flag
-        if ( bit0==1 && bit1==1 && bit2==1 && bit3==1) {
-          ACK_flag = true;
-        }
-        // If all bits are 0, well, they shouldn't be at this time so do nothing
+    //     if ( bit0==1 && bit1==1 && bit2==1 && bit3==1) {
+    //      ACK_flag = true;
+    //    }
+    // If all bits are 0, well, they shouldn't be at this time so do nothing
+    //   if ( bit0==0 && bit1==0 && bit2==0 && bit3==0) { } 
+    // otherwise, you have received a valid transmission
+    // Send ACK
+    //   IR.print(ACK);
+    //   Serial.println("data valid, ACK sent");
         
-        // otherwise, you have received a valid transmission
-        // Send ACK
-        IR.print(ACK);
-        Serial.println("data valid, ACK sent");
+    // for the remote side, illuminate a light on remote
+    // output to a decoder
         
-        // for the remote side, illuminate a light on remote
-        // output to a decoder
-        
-        // for the main controller side, ? change lights on model ?
+    // for the main controller side, ? change lights on model ?
 
-      }
-      // Else do nothing
+    // }
+    //else {
+    //  Serial.println("invalid data");
+    //}
+    // Else do nothing
+    //}
   }
 }

@@ -1,0 +1,34 @@
+<!--
+Cecilia Delcamp, March 9, 2022
+For Psyche Capstone Class 17A
+
+To test button pushes using javascript to generate serial out
+-->
+
+<html>
+    <head>
+        <title>Web Serial API testing page</title>
+
+    </head>
+    
+    <body>
+    
+    <script src="serialjavascript.js"></script>
+        
+        <!-- This button manually sets up the serial port
+        <button id="selectPort" onclick='promptUserForPort();'>Select a port</button>
+        <br><br>
+        -->
+        
+        <button id="button1" onclick='sendSerial(1);'><img src="button1.jpg" /></button>
+        <br><br>
+        <button id="button2" onclick='sendSerial(2);'><img src="button2.jpg" /></button>
+        <br><br>
+        <button id="button3" onclick='sendSerial(3);'><img src="button3.jpg"></button>
+        
+    </body>
+
+
+
+
+</html>

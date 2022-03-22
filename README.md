@@ -16,5 +16,4 @@ Digital PIN 8 = GPIO bit 0
 Digital PIN 9 = GPIO bit 1
 Digital PIN 10= GPIO bit 2
 Digital PIN 11= GPIO bit 3
-
 Digital PIN 12= IR Remote data pin

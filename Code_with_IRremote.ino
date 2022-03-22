@@ -73,20 +73,20 @@ void loop() {
 
      // IR remote read
      if (irrecv.decode(&results)){    // Read Remote Values
-          remote = (results.value);
-          //Serial.println(remote);
-          irrecv.resume(); 
-     //      IR remote decode
-     // remote 0 = 26775
-     // remote 1 = 12495
-     // remote 2 = 6375
-     // remote 3 = 31365
-     // remote 4 = 4335
-     // remote 5 = 14535
-     // remote 6 = 23205
-     // remote 7 = 17085
-     // remote 8 = 19125
-     // remote 9 = 21165
+           remote = (results.value);
+           irrecv.resume(); 
+       
+           //      IR remote decode
+           // remote 0 = 26775
+           // remote 1 = 12495
+           // remote 2 = 6375
+           // remote 3 = 31365
+           // remote 4 = 4335
+           // remote 5 = 14535
+           // remote 6 = 23205
+           // remote 7 = 17085
+           // remote 8 = 19125
+           // remote 9 = 21165
      
            // Read GPIO pins (will need to change to seireal input later probably)
            int Bit0 = digitalRead(8);
@@ -94,10 +94,11 @@ void loop() {
            int Bit2 = digitalRead(10);
            int Bit3 = digitalRead(11);
            //int DisplayMode = 0;           // Set to 0 for testing code
-           int DisplayMode = remote;
-           Serial.println(remote);
+       
+           int DisplayMode = 0; // Later the display mode will be set by the serial input from the UI PC
+       
            // Light all strands in for testing
-           if(DisplayMode == 26775){
+           if(remote == 26775 || DisplayMode ==0){
                 int x = 0;
                 while(x<50){
                       leds3[x] = CRGB::Black;
@@ -111,7 +112,7 @@ void loop() {
            }
            
            // Light all strands off for testing
-           else if(DisplayMode == 12495){
+           else if(remote == 12495 || DisplayMode ==1){
                  int x = 0;
                       while(x<50){
                             leds3[x] = CRGB::White;
@@ -164,6 +165,9 @@ void loop() {
            }
            else if(DisplayMode == 15){
            // Will plan various other modes later
+           }
+           else {
+             Serial.print("Something went wrong");
            }
      }
 }

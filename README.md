@@ -2,8 +2,8 @@
 
 Use this area to show how to connect the board to everything
 
-ELEGOO PIN LAYOUT
-        Digital
+ELEGOO PIN LAYOUT        Digital
+
 Digital PIN 0 = Logic 0
 
 Digital PIN 1 = Logic 1

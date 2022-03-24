@@ -8,10 +8,7 @@
 // Digital PIN 5 = Led Light Strip 3
 // Digital PIN 6 = Led Light Strip 4
 // Digital PIN 7 = Led Light Strip 5
-// Digital PIN 8 = GPIO bit 0
-// Digital PIN 9 = GPIO bit 1
-// Digital PIN 10= GPIO bit 2
-// Digital PIN 11= GPIO bit 3
+// Digital PIN 8 = PIR sensor
 // Digital PIN 12= IR Remote data pin
 //
 //        Analog
@@ -64,17 +61,22 @@ void setup() {
      FastLED.addLeds<NEOPIXEL, DATA_PIN5>(leds5, NUM_LEDS5);
      FastLED.addLeds<NEOPIXEL, DATA_PIN6>(leds6, NUM_LEDS6);
      FastLED.addLeds<NEOPIXEL, DATA_PIN7>(leds7, NUM_LEDS7);
+     
+     // pin 8 will be the signal input from the PIR snesor. When there is no
+     // movement the signal will go LOW and when movement is detected the signal
+     // will go HIGH
+     pinMode(8, INPUT);   // Pin for PIR sensor
 }
 
-//int switch1=0;
 int remote = 0;
+int PIRsensor = 0;
 
 void loop() {
 
      // IR remote read
-     if (irrecv.decode(&results)){    // Read Remote Values
-           remote = (results.value);
-           irrecv.resume(); 
+     if (irrecv.decode(&results)){      // Read Remote Values
+           remote = (results.value);    // Set remote values to variable "remote"
+           irrecv.resume();             // Continue searching for remote values
        
            //      IR remote decode
            // remote 0 = 26775
@@ -87,13 +89,6 @@ void loop() {
            // remote 7 = 17085
            // remote 8 = 19125
            // remote 9 = 21165
-     
-           // Read GPIO pins (will need to change to seireal input later probably)
-           int Bit0 = digitalRead(8);
-           int Bit1 = digitalRead(9);
-           int Bit2 = digitalRead(10);
-           int Bit3 = digitalRead(11);
-           //int DisplayMode = 0;           // Set to 0 for testing code
        
            int DisplayMode = 0; // Later the display mode will be set by the serial input from the UI PC
        

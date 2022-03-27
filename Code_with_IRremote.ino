@@ -88,7 +88,8 @@ int remote = 0;
 int PIRsensor = 0;
 
 void loop() {
-
+  int DisplayMode = 0; // Later the display mode will be set by the serial input from the UI PC
+       
   // ---------- http webserver ------------------
   // listen for incoming clients
   EthernetClient client = server.available();
@@ -128,12 +129,52 @@ void loop() {
     if ( request.startsWith("POST /1") ) {
       DisplayMode = 1;
     }
-    if ( request.startsWith("POST /2") ) {
+    else if ( request.startsWith("POST /2") ) {
       DisplayMode = 2;
     }
-    if ( request.startsWith("POST /3") ) {
+    else if ( request.startsWith("POST /3") ) {
       DisplayMode = 3;
     }
+    else if ( request.startsWith("POST /4") ) {
+      DisplayMode = 4;
+    }
+    else if ( request.startsWith("POST /5") ) {
+      DisplayMode = 5;
+    }
+    else if ( request.startsWith("POST /6") ) {
+      DisplayMode = 6;
+    }
+    else if ( request.startsWith("POST /7") ) {
+      DisplayMode = 7;
+    }
+    else if ( request.startsWith("POST /8") ) {
+      DisplayMode = 8;
+    }
+    else if ( request.startsWith("POST /9") ) {
+      DisplayMode = 9;
+    }
+    else if ( request.startsWith("POST /10") ) {
+      DisplayMode = 10;
+    }
+    else if ( request.startsWith("POST /11") ) {
+      DisplayMode = 11;
+    }
+    else if ( request.startsWith("POST /12") ) {
+      DisplayMode = 12;
+    }
+    else if ( request.startsWith("POST /13") ) {
+      DisplayMode = 13;
+    }
+    else if ( request.startsWith("POST /14") ) {
+      DisplayMode = 14;
+    }
+    else if ( request.startsWith("POST /15") ) {
+      DisplayMode = 15;
+    }
+// place holder for receiving day/time/sleepmode data
+//    else if ( request.startsWith("POST /TIME") ) {
+//      ;
+//    }
 
     // close the connection:
     client.stop();
@@ -157,8 +198,6 @@ void loop() {
            // remote 7 = 17085
            // remote 8 = 19125
            // remote 9 = 21165
-       
-           int DisplayMode = 0; // Later the display mode will be set by the serial input from the UI PC
        
            // Light all strands in for testing
            if(remote == 26775 || DisplayMode ==0){

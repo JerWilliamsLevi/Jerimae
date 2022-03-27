@@ -62,11 +62,7 @@ void setup() {
      
      pinMode(2,  INPUT);   // hard switch that might be removed later
      
-     pinMode(8,  INPUT);   // GPIO pins from Computer science team
-     pinMode(9,  INPUT);
-     pinMode(10, INPUT);
-     pinMode(11, INPUT);
-     
+     // Data from CS currently planned to go over LAN connection (http web server)     
      Ethernet.begin(mac, ip); // start ethernet connection
      if (Ethernet.linkStatus() == LinkOFF) {
        Serial.println("Ethernet cable is not connected.");
@@ -93,6 +89,58 @@ int PIRsensor = 0;
 
 void loop() {
 
+  // ---------- http webserver ------------------
+  // listen for incoming clients
+  EthernetClient client = server.available();
+  if (client) {
+    // an http request ends with a blank line
+    boolean currentLineIsBlank = true;
+    String request = ""; // holds request string
+
+    while (client.connected()) {
+      if (client.available()) {
+        char c = client.read();
+        request = request + c; 
+
+        // if you've gotten to the end of the line (received a newline
+        // character) and the line is blank, the http request has ended,
+        // so you can send a reply
+        
+        if (c == '\n' && currentLineIsBlank) {
+          // send a standard http response header
+          client.println("HTTP/1.1 200 OK\nContent-Type: text/html\nConnection: close\n");
+          client.println("<!DOCTYPE html><html><body>FirstButton</body></html>");
+          break;
+        }
+        if (c == '\n') {
+          // you're starting a new line
+          currentLineIsBlank = true;
+        } else if (c != '\r') {
+          // you've gotten a character on the current line
+          currentLineIsBlank = false;
+        }
+      }
+    }
+
+    //Serial.print(request); // print the request (debugging)
+
+    // check what has been pressed
+    if ( request.startsWith("POST /1") ) {
+      DisplayMode = 1;
+    }
+    if ( request.startsWith("POST /2") ) {
+      DisplayMode = 2;
+    }
+    if ( request.startsWith("POST /3") ) {
+      DisplayMode = 3;
+    }
+
+    // close the connection:
+    client.stop();
+    Serial.println("\nclient disconnected");
+     }
+     // -----------------------------------
+  
      // IR remote read
      if (irrecv.decode(&results)){      // Read Remote Values
            remote = (results.value);    // Set remote values to variable "remote"

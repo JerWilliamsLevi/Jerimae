@@ -9,14 +9,25 @@
 // Digital PIN 6 = Led Light Strip 4
 // Digital PIN 7 = Led Light Strip 5
 // Digital PIN 8 = PIR sensor
+// Digital PIN 10 = Ethernet Board NSS pin
+// Digital PIN 11 = Ethernet Board RST pin
 // Digital PIN 12= IR Remote data pin
+// Digital PIN 50 = Ethernet Board MI pin
+// Digital PIN 51 = Ethernet Board MO pin
+// Digital PIN 52 = Ethernet Board SCK pin
 //
 //        Analog
 //        Serial
 
 #include "FastLED.h"
 #include <IRremote.h>
+#include <SPI.h>
+#include <Ethernet.h>
 
+// ---------- LAN setup info
+byte mac[] = { 0xA9, 0xB9, 0xC9, 0xD9, 0xE9, 0xF9 }; // MAC address
+IPAddress ip(192, 168, 0, 32);  // IP (depends on local network)
+EthernetServer server(8224); // initialize with port 8224
 
 // Set up for IR Remote
 const int RECV_PIN = 12;
@@ -56,6 +67,15 @@ void setup() {
      pinMode(10, INPUT);
      pinMode(11, INPUT);
      
+     Ethernet.begin(mac, ip); // start ethernet connection
+     if (Ethernet.linkStatus() == LinkOFF) {
+       Serial.println("Ethernet cable is not connected.");
+     }
+     server.begin();
+
+     Serial.print("server is at ");
+     Serial.println(Ethernet.localIP());
+  
      FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3);
      FastLED.addLeds<NEOPIXEL, DATA_PIN4>(leds4, NUM_LEDS4);
      FastLED.addLeds<NEOPIXEL, DATA_PIN5>(leds5, NUM_LEDS5);

@@ -20,7 +20,7 @@
 //        Serial
 
 #include "FastLED.h"
-#include <IRremote.h>
+#include <IRremote.hpp>
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -31,7 +31,7 @@ EthernetServer server(8224); // initialize with port 8224
 
 // Set up for IR Remote
 const int RECV_PIN = 12;
-IRrecv irrecv(RECV_PIN);
+IRrecv receiver(RECV_PIN);
 decode_results results;
 
 // Number of LEDs in light strip
@@ -58,7 +58,7 @@ CRGB leds7[NUM_LEDS7];
 void setup() {
   
      Serial.begin(9600);
-     irrecv.enableIRIn();  // IR remote
+     receiver.enableIRIn();  // IR remote
      
      pinMode(2,  INPUT);   // hard switch that might be removed later
      
@@ -85,10 +85,11 @@ void setup() {
 }
 
 int remote = 0;
+int remotefunction();
 int PIRsensor = 0;
+int DisplayMode = 0;
 
 void loop() {
-  int DisplayMode = 0; // Later the display mode will be set by the serial input from the UI PC
        
   // ---------- http webserver ------------------
   // listen for incoming clients
@@ -181,11 +182,9 @@ void loop() {
     Serial.println("\nclient disconnected");
      }
      // -----------------------------------
-  
-     // IR remote read
-     if (irrecv.decode(&results)){      // Read Remote Values
-           remote = (results.value);    // Set remote values to variable "remote"
-           irrecv.resume();             // Continue searching for remote values
+  remote = remotefunction();
+  delay(1000);
+  Serial.println(remote);
        
            //      IR remote decode
            // remote 0 = 26775
@@ -200,7 +199,7 @@ void loop() {
            // remote 9 = 21165
        
            // Light all strands in for testing
-           if(remote == 26775 || DisplayMode ==0){
+           if(remote == 26775 || DisplayMode == 1){
                 int x = 0;
                 while(x<50){
                       leds3[x] = CRGB::Black;
@@ -214,7 +213,7 @@ void loop() {
            }
            
            // Light all strands off for testing
-           else if(remote == 12495 || DisplayMode ==1){
+           else if(remote == 12495 || DisplayMode == 2){
                  int x = 0;
                       while(x<50){
                             leds3[x] = CRGB::White;
@@ -272,4 +271,14 @@ void loop() {
              Serial.print("Something went wrong");
            }
      }
+
+
+int remotefunction()              // function to load IR code
+{
+  if (receiver.decode(&results))
+  {
+    remote = results.value;
+    receiver.resume();
+  }
+  return (remote);
 }

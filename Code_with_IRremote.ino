@@ -34,9 +34,14 @@ const int RECV_PIN = 12;
 IRrecv receiver(RECV_PIN);
 decode_results results;
 
+// colors for instruments
+const NAVIGATION = 0x00ffff; // BLUE
+const SCIENCE = 0x40ff00; // GREEN
+const COMMUNICATION = 0xffcc00; // YELLOW
+
 // Number of LEDs in light strip
 // set to 50 for test strip
-#define NUM_LEDS3 50
+#define NUM_LEDS3 40 // 32 ft strands have 40 ICs
 #define NUM_LEDS4 50
 #define NUM_LEDS5 50
 #define NUM_LEDS6 50
@@ -201,7 +206,7 @@ void loop() {
            // Light all strands in for testing
            if(remote == 26775 || DisplayMode == 1){
                 int x = 0;
-                while(x<50){
+                while(x<40){
                       leds3[x] = CRGB::Black;
                       leds4[x] = CRGB::Black;
                       leds5[x] = CRGB::Black;
@@ -215,7 +220,7 @@ void loop() {
            // Light all strands off for testing
            else if(remote == 12495 || DisplayMode == 2){
                  int x = 0;
-                      while(x<50){
+                      while(x<40){
                             leds3[x] = CRGB::White;
                             leds4[x] = CRGB::Green;
                             leds5[x] = CRGB::Blue;

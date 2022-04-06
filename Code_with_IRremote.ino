@@ -22,6 +22,8 @@
 
 // this is a line to see if 2 people can edit
 
+// This is also a test
+
 #include "FastLED.h"
 #include <IRremote.hpp>
 #include <SPI.h>

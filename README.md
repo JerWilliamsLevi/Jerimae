@@ -24,25 +24,25 @@ Digital PIN 12= IR Remote data pin
 
 
 
-           //      IR remote decode
-           // POWER    = 13598
-           // UP       = 27399
-           // DOWN     = -6218
-           // Left     = 28282
-           // Right    = 4795
-           // TOPL     = -15554
-           // TOPR     = -22246
-           // BotR     = -19202
-           // BotL     = 5150
-           // BottomL  = 20023
-           // BottomR  = 30879
-           // remote 0 = -8326
-           // remote 1 = 22907
-           // remote 2 = 31102
-           // remote 3 = 7615
-           // remote 4 = 21462
-           // remote 5 = 20191
-           // remote 6 = -9574
-           // remote 7 = 32475
-           // remote 8 = 3710
-           // remote 9 = 7031
+       //      IR remote decode
+       // POWER    = 13598  | sleep/wake
+       // UP       = 27399  | next group
+       // DOWN     = -6218  | previous group
+       // Left     = 28282  | previous object
+       // Right    = 4795   | next object
+       // TOPL     = -15554 | Navigation
+       // TOPR     = -22246 | Science
+       // BotR     = -19202 | Comunication
+       // BotL     = 5150   | Structure
+       // BottomL  = 20023  | Cold Gas Thruster
+       // BottomR  = 30879  | SPThruster
+       // remote 0 = -8326  | 
+       // remote 1 = 22907  | Magnetometer
+       // remote 2 = 31102  | Gamma Ray Spectrometer
+       // remote 3 = 7615   | Neutron Specctrometer
+       // remote 4 = 21462  | Multi Spectral Imagers
+       // remote 5 = 20191  | Low Gain Antenna
+       // remote 6 = -9574  | X-Band High Gain Antenna
+       // remote 7 = 32475  | DSOC Assembly
+       // remote 8 = 3710   | Star Trackers
+       // remote 9 = 7031   | Sun Sensors

@@ -138,51 +138,51 @@ void loop() {
     //Serial.print(request); // print the request (debugging)
 
     // check what has been pressed
-    if ( request.startsWith("POST /1 ") ) { // Science Group
-      DisplayMode = 1;
-    }
-    else if ( request.startsWith("POST /2") ) { // Magnetometer
-      DisplayMode = 2;
-    }
-    else if ( request.startsWith("POST /3") ) { // Gamma Ray Spectrometer
-      DisplayMode = 3;
-    }
-    else if ( request.startsWith("POST /4") ) { // Neutron Spectrometer
-      DisplayMode = 4;
-    }
-    else if ( request.startsWith("POST /5") ) { // Multi Spectral Imagers
-      DisplayMode = 5;
-    }
-    else if ( request.startsWith("POST /6") ) { // Low Gain Antenna
-      DisplayMode = 6;
-    }
-    else if ( request.startsWith("POST /7") ) { // Communication Group
-      DisplayMode = 7;
-    }
-    else if ( request.startsWith("POST /8") ) { // X Band HG Antenna
-      DisplayMode = 8;
-    }
-    else if ( request.startsWith("POST /9") ) { // DSOC
-      DisplayMode = 9;
-    }
-    else if ( request.startsWith("POST /10") ) { // Navigation Group
-      DisplayMode = 10;
-    }
-    else if ( request.startsWith("POST /11") ) { // Cold Gas Thrusters A & B
-      DisplayMode = 11;
-    }
-    else if ( request.startsWith("POST /12") ) { // Star Trackers
-      DisplayMode = 12;
-    }
-    else if ( request.startsWith("POST /13") ) { // Sun Sensors
-      DisplayMode = 13;
-    }
-    else if ( request.startsWith("POST /14") ) { // SP Thruster
-      DisplayMode = 14;
-    }
-    else if ( request.startsWith("POST /15") ) { // Central Core
-      DisplayMode = 15;
-    }
+//    if ( request.startsWith("POST /1 ") ) { // Science Group
+//      DisplayMode = 1;
+//    }
+//    else if ( request.startsWith("POST /2") ) { // Magnetometer
+//      DisplayMode = 2;
+//    }
+//    else if ( request.startsWith("POST /3") ) { // Gamma Ray Spectrometer
+//      DisplayMode = 3;
+//    }
+//    else if ( request.startsWith("POST /4") ) { // Neutron Spectrometer
+//      DisplayMode = 4;
+//    }
+//    else if ( request.startsWith("POST /5") ) { // Multi Spectral Imagers
+//      DisplayMode = 5;
+//    }
+//    else if ( request.startsWith("POST /6") ) { // Low Gain Antenna
+//      DisplayMode = 6;
+//    }
+//    else if ( request.startsWith("POST /7") ) { // Communication Group
+//      DisplayMode = 7;
+//    }
+//    else if ( request.startsWith("POST /8") ) { // X Band HG Antenna
+//      DisplayMode = 8;
+//    }
+//    else if ( request.startsWith("POST /9") ) { // DSOC
+//      DisplayMode = 9;
+//    }
+//    else if ( request.startsWith("POST /10") ) { // Navigation Group
+//      DisplayMode = 10;
+//    }
+//    else if ( request.startsWith("POST /11") ) { // Cold Gas Thrusters A & B
+//      DisplayMode = 11;
+//    }
+//    else if ( request.startsWith("POST /12") ) { // Star Trackers
+//      DisplayMode = 12;
+//    }
+//    else if ( request.startsWith("POST /13") ) { // Sun Sensors
+//      DisplayMode = 13;
+//    }
+//    else if ( request.startsWith("POST /14") ) { // SP Thruster
+//      DisplayMode = 14;
+//    }
+//    else if ( request.startsWith("POST /15") ) { // Central Core
+//      DisplayMode = 15;
+//    }
 // place holder for receiving day/time/sleepmode data
 //    else if ( request.startsWith("POST /TIME") ) {
 //      ;
@@ -211,7 +211,7 @@ void loop() {
        
   // TO USE INCREMENT, DECREMENT, what if we do something like request = "POST /2 "; for 1, "POST /3 "; for 2, etc ?
   
-           // Light all strands in for testing
+           // Select which lights to turn on
            if(remote == 26775 || request.startsWith("POST /1 ")){ // Science Group
              all_off();
              Magnetometer();
@@ -220,33 +220,27 @@ void loop() {
              MultiSpectral();
              LowGainAnt();
            }
-           
-           // Light all strands off for testing
-           else if(remote == 12495 || DisplayMode == 2){
-                 int x = 0;
-                      while(x<40){
-                            leds3[x] = CRGB::White;
-                            leds4[x] = CRGB::Green;
-                            leds5[x] = CRGB::Blue;
-                            leds6[x] = CRGB::Red;
-                            leds7[x] = CRGB::Black;
-                            FastLED.show();
-                      x=x+1;
-                }
+           else if(remote == 12495 || "POST /2 "){ // Magnetometer
+             all_off();
+             Magnetometer();
            }
-           else if(DisplayMode == 2){
-           // Will plan various other modes later
+           else if( "POST /3 "){ // Gamma Ray Spectrometer
+             all_off();
+             GammaRay();
            }
-           else if(DisplayMode == 3){
-           // Will plan various other modes later
+           else if( "POST /4 "){ // Neutron Spectrometer
+             all_off();
+             Neutron();
            }
-           else if(DisplayMode == 4){
-           // Will plan various other modes later
+           else if( "POST /5 "){ // Multi Spectral Imagers
+             all_off();
+             MultiSpectral();
            }
-           else if(DisplayMode == 5){
-           // Will plan various other modes later
+           else if(DisplayMode == 5){ // Low Gain Antenna
+             all_off();
+             LowGainAnt();
            }
-           else if(DisplayMode == 6){
+           else if(DisplayMode == 6){ // Communication Group
            // Will plan various other modes later
            }
            else if(DisplayMode == 7){
@@ -306,17 +300,17 @@ int all_off()
 int Magnetometer() {
   // not installed 4/6/2022
   // color = SCIENCE
-  int yes = 1; // delete when actual code written;
+  all_off(); // delete when actual code written;
 }
 int GammaRay() {
   // not installed 4/6/2022
   // color = SCIENCE
-  int yes = 1; // delete when actual code written;
+  all_off(); // delete when actual code written;
 }
 int Neutron() {
     // not installed 4/6/2022
   // color = SCIENCE
-  int yes = 1; // delete when actual code written;
+  all_off(); // delete when actual code written;
 }
 int MultiSpectral() {
   for ( int x7 = 8; x7<13; x7++) {
@@ -329,7 +323,7 @@ int MultiSpectral() {
 int LowGainAnt() {
     // not installed 4/6/2022
   // color = SCIENCE
-  int yes = 1; // delete when actual code written;
+  all_off(); // delete when actual code written;
 }
 
 

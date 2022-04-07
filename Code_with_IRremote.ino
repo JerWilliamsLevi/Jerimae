@@ -236,18 +236,22 @@ void loop() {
              all_off();
              MultiSpectral();
            }
-           else if(DisplayMode == 5){ // Low Gain Antenna
+           else if( "POST /6 "){ // Low Gain Antenna
              all_off();
              LowGainAnt();
            }
-           else if(DisplayMode == 6){ // Communication Group
-           // Will plan various other modes later
+           else if( "POST /7 "){ // Communication Group
+             all_off();
+             XBandAnt();
+             DSOC();
            }
-           else if(DisplayMode == 7){
-           // Will plan various other modes later
+           else if( "POST /8 "){ // X Band High Gain Antenna
+             all_off();
+             XBandAnt();
            }
-           else if(DisplayMode == 8){
-           // Will plan various other modes later
+           else if( "POST /9 "){ //DSOC
+             all_off();
+             DSOC();
            }
            else if(DisplayMode == 9){
            // Will plan various other modes later
@@ -324,6 +328,17 @@ int LowGainAnt() {
     // not installed 4/6/2022
   // color = SCIENCE
   all_off(); // delete when actual code written;
+}
+
+int XBandAnt() {
+    // not installed 4/6/2022
+  // color = COMMUNICATION
+  all_off(); // delete when actual code written;
+}
+int DSOC() {
+  for ( int x5=7; x5<NUM_LEDS5; x5++) {
+    leds5[x5] = COMMUNICATION;
+  }
 }
 
 

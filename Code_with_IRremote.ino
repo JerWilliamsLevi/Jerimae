@@ -47,10 +47,11 @@ const COMMUNICATION = 0xffcc00; // YELLOW
 // Number of LEDs in light strip
 // set to 50 for test strip
 #define NUM_LEDS3 40 // 32 ft strands have 40 ICs
-#define NUM_LEDS4 50
-#define NUM_LEDS5 50
-#define NUM_LEDS6 50
-#define NUM_LEDS7 50
+#define NUM_LEDS4 40
+#define NUM_LEDS5 40
+#define NUM_LEDS6 40
+#define NUM_LEDS7 40
+#define NUM_LEDS8 50 // 15 ft strands have 50 ICs
 
 #define DATA_PIN3 3 // lighting pin for central cylinder
 #define DATA_PIN4 4 // Lighting points for other introments (pin and names adjusted later)
@@ -137,49 +138,49 @@ void loop() {
     //Serial.print(request); // print the request (debugging)
 
     // check what has been pressed
-    if ( request.startsWith("POST /1") ) {
+    if ( request.startsWith("POST /1 ") ) { // Science Group
       DisplayMode = 1;
     }
-    else if ( request.startsWith("POST /2") ) {
+    else if ( request.startsWith("POST /2") ) { // Magnetometer
       DisplayMode = 2;
     }
-    else if ( request.startsWith("POST /3") ) {
+    else if ( request.startsWith("POST /3") ) { // Gamma Ray Spectrometer
       DisplayMode = 3;
     }
-    else if ( request.startsWith("POST /4") ) {
+    else if ( request.startsWith("POST /4") ) { // Neutron Spectrometer
       DisplayMode = 4;
     }
-    else if ( request.startsWith("POST /5") ) {
+    else if ( request.startsWith("POST /5") ) { // Multi Spectral Imagers
       DisplayMode = 5;
     }
-    else if ( request.startsWith("POST /6") ) {
+    else if ( request.startsWith("POST /6") ) { // Low Gain Antenna
       DisplayMode = 6;
     }
-    else if ( request.startsWith("POST /7") ) {
+    else if ( request.startsWith("POST /7") ) { // Communication Group
       DisplayMode = 7;
     }
-    else if ( request.startsWith("POST /8") ) {
+    else if ( request.startsWith("POST /8") ) { // X Band HG Antenna
       DisplayMode = 8;
     }
-    else if ( request.startsWith("POST /9") ) {
+    else if ( request.startsWith("POST /9") ) { // DSOC
       DisplayMode = 9;
     }
-    else if ( request.startsWith("POST /10") ) {
+    else if ( request.startsWith("POST /10") ) { // Navigation Group
       DisplayMode = 10;
     }
-    else if ( request.startsWith("POST /11") ) {
+    else if ( request.startsWith("POST /11") ) { // Cold Gas Thrusters A & B
       DisplayMode = 11;
     }
-    else if ( request.startsWith("POST /12") ) {
+    else if ( request.startsWith("POST /12") ) { // Star Trackers
       DisplayMode = 12;
     }
-    else if ( request.startsWith("POST /13") ) {
+    else if ( request.startsWith("POST /13") ) { // Sun Sensors
       DisplayMode = 13;
     }
-    else if ( request.startsWith("POST /14") ) {
+    else if ( request.startsWith("POST /14") ) { // SP Thruster
       DisplayMode = 14;
     }
-    else if ( request.startsWith("POST /15") ) {
+    else if ( request.startsWith("POST /15") ) { // Central Core
       DisplayMode = 15;
     }
 // place holder for receiving day/time/sleepmode data
@@ -280,8 +281,28 @@ void loop() {
            else {
              Serial.print("Something went wrong");
            }
+          
+           FastLED.show();
      }
 
+int all_off()
+{
+  for( int x3=0; x3<NUM_LEDS3; x3++){
+    leds3[x3] = CRGB::Black;
+  }
+  for( int x4=0; x4<NUM_LEDS4; x4++){
+    leds4[x4] = CRGB::Black;
+  }
+  for( int x5=0; x5<NUM_LEDS5; x5++){
+    leds5[x5] = CRGB::Black;
+  }
+  for( int x6=0; x6<NUM_LEDS6; x6++){
+    leds6[x6] = CRGB::Black;
+  }
+  for( int x7=0; x7<NUM_LEDS7; x7++){
+    leds7[x7] = CRGB::Black;
+  }
+}
 
 int remotefunction()              // function to load IR code
 {

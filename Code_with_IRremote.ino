@@ -341,6 +341,33 @@ int DSOC() {
   }
 }
 
+int ColdGasThrusters() {
+  for ( int x4 = 6; x4<8; x4++) {
+    leds4[x4] = NAVIGATION;
+  }
+  for (int x4 = 31; x4<34; x4++) {
+    leds4[x4] = NAVIGATION;
+  }
+  for (int x6 = 0; x6<3; x6++) {
+    leds6[x6] = NAVIGATION;
+  }
+  for (int x6=27; x6<30; x6++) {
+    leds6[x6] = NAVIGATION;
+  }
+  for (int x7=0; x7<3; x7++) {
+    leds7[x7] = NAVIGATION;
+  }
+  for (int x7 = 25; x7<28; x7++) {
+    leds7[x7] = NAVIGATION;
+  }
+}
+int StarTrackers() {
+}
+int SunSensors() {
+}
+int SPThrusters() {
+}
+
 
 int remotefunction()              // function to load IR code
 {

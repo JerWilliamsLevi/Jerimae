@@ -197,17 +197,28 @@ void loop() {
   delay(1000);
   Serial.println(remote);
        
-           //      IR remote decode
-           // remote 0 = 26775
-           // remote 1 = 12495
-           // remote 2 = 6375
-           // remote 3 = 31365
-           // remote 4 = 4335
-           // remote 5 = 14535
-           // remote 6 = 23205
-           // remote 7 = 17085
-           // remote 8 = 19125
-           // remote 9 = 21165
+   //      IR remote decode
+   // POWER    = 13598  | sleep/wake
+   // UP       = 27399  | next group
+   // DOWN     = -6218  | previous group
+   // Left     = 28282  | previous object
+   // Right    = 4795   | next object
+   // TOPL     = -15554 | Navigation
+   // TOPR     = -22246 | Science
+   // BotR     = -19202 | Comunication
+   // BotL     = 5150   | Structure
+   // BottomL  = 20023  | Cold Gas Thruster
+   // BottomR  = 30879  | SPThruster
+   // remote 0 = -8326  | 
+   // remote 1 = 22907  | Magnetometer
+   // remote 2 = 31102  | Gamma Ray Spectrometer
+   // remote 3 = 7615   | Neutron Specctrometer
+   // remote 4 = 21462  | Multi Spectral Imagers
+   // remote 5 = 20191  | Low Gain Antenna
+   // remote 6 = -9574  | X-Band High Gain Antenna
+   // remote 7 = 32475  | DSOC Assembly
+   // remote 8 = 3710   | Star Trackers
+   // remote 9 = 7031   | Sun Sensors
        
   // TO USE INCREMENT, DECREMENT, what if we do something like request = "POST /2 "; for 1, "POST /3 "; for 2, etc ?
   
@@ -220,36 +231,36 @@ void loop() {
              MultiSpectral();
              LowGainAnt();
            }
-           else if(remote == 12495 || "POST /2 "){ // Magnetometer
+           else if(remote == 22907 || "POST /2 "){ // Magnetometer
              all_off();
              Magnetometer();
            }
-           else if( "POST /3 "){ // Gamma Ray Spectrometer
+           else if(remote == 31102 || "POST /3 "){ // Gamma Ray Spectrometer
              all_off();
              GammaRay();
            }
-           else if( "POST /4 "){ // Neutron Spectrometer
+           else if(remote == 7615 || "POST /4 "){ // Neutron Spectrometer
              all_off();
              Neutron();
            }
-           else if( "POST /5 "){ // Multi Spectral Imagers
+           else if(remote == 21462 || "POST /5 "){ // Multi Spectral Imagers
              all_off();
              MultiSpectral();
            }
-           else if( "POST /6 "){ // Low Gain Antenna
+           else if(remote == 20191 || "POST /6 "){ // Low Gain Antenna
              all_off();
              LowGainAnt();
            }
-           else if( "POST /7 "){ // Communication Group
+           else if(remote == -19202 || "POST /7 "){ // Communication Group
              all_off();
              XBandAnt();
              DSOC();
            }
-           else if( "POST /8 "){ // X Band High Gain Antenna
+           else if(remote == -9574 || "POST /8 "){ // X Band High Gain Antenna
              all_off();
              XBandAnt();
            }
-           else if( "POST /9 "){ //DSOC
+           else if(remote == 32475 || "POST /9 "){ //DSOC
              all_off();
              DSOC();
            }
@@ -277,9 +288,10 @@ void loop() {
            else {
              Serial.print("Something went wrong");
            }
-          
            FastLED.show();
-     }
+           incrementObject(remote, request);
+           incrementGroup(remote, request);
+}
 
 int all_off()
 {

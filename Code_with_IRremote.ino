@@ -212,17 +212,13 @@ void loop() {
   // TO USE INCREMENT, DECREMENT, what if we do something like request = "POST /2 "; for 1, "POST /3 "; for 2, etc ?
   
            // Light all strands in for testing
-           if(remote == 26775 || request.startsWith("POST /1 ")){
-                int x = 0;
-                while(x<40){
-                      leds3[x] = CRGB::Black;
-                      leds4[x] = CRGB::Black;
-                      leds5[x] = CRGB::Black;
-                      leds6[x] = CRGB::Black;
-                      leds7[x] = CRGB::Black;
-                      FastLED.show();
-                      x=x+1;
-                }
+           if(remote == 26775 || request.startsWith("POST /1 ")){ // Science Group
+             all_off();
+             Magnetometer();
+             GammaRay();
+             Neutron();
+             MultiSpectral();
+             LowGainAnt();
            }
            
            // Light all strands off for testing
@@ -304,7 +300,38 @@ int all_off()
   for( int x7=0; x7<NUM_LEDS7; x7++){
     leds7[x7] = CRGB::Black;
   }
+  return(1);
 }
+
+int Magnetometer() {
+  // not installed 4/6/2022
+  // color = SCIENCE
+  int yes = 1; // delete when actual code written;
+}
+int GammaRay() {
+  // not installed 4/6/2022
+  // color = SCIENCE
+  int yes = 1; // delete when actual code written;
+}
+int Neutron() {
+    // not installed 4/6/2022
+  // color = SCIENCE
+  int yes = 1; // delete when actual code written;
+}
+int MultiSpectral() {
+  for ( int x7 = 8; x7<13; x7++) {
+    leds7[x7] = SCIENCE;
+  }
+  for ( int x7 = 14; x7<19; x7++) {
+    leds7[x7] = SCIENCE;
+  }
+}
+int LowGainAnt() {
+    // not installed 4/6/2022
+  // color = SCIENCE
+  int yes = 1; // delete when actual code written;
+}
+
 
 int remotefunction()              // function to load IR code
 {

@@ -40,9 +40,9 @@ IRrecv receiver(RECV_PIN);
 decode_results results;
 
 // colors for instruments
-const NAVIGATION = 0x00ffff; // BLUE
-const SCIENCE = 0x40ff00; // GREEN
-const COMMUNICATION = 0xffcc00; // YELLOW
+const int NAVIGATION = 0x00ffff; // BLUE
+const int SCIENCE = 0x40ff00; // GREEN
+const int COMMUNICATION = 0xffcc00; // YELLOW
 
 // Number of LEDs in light strip
 // set to 50 for test strip
@@ -209,8 +209,10 @@ void loop() {
            // remote 8 = 19125
            // remote 9 = 21165
        
+  // TO USE INCREMENT, DECREMENT, what if we do something like request = "POST /2 "; for 1, "POST /3 "; for 2, etc ?
+  
            // Light all strands in for testing
-           if(remote == 26775 || DisplayMode == 1){
+           if(remote == 26775 || request.startsWith("POST /1 ")){
                 int x = 0;
                 while(x<40){
                       leds3[x] = CRGB::Black;

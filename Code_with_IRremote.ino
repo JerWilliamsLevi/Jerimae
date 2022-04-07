@@ -362,8 +362,24 @@ int ColdGasThrusters() {
   }
 }
 int StarTrackers() {
+  for (int x6=10; x6<16; x6++) {
+    leds6[x6] = NAVIGATION;
+  }
+  for (int x6=18; x6<23; x6++) {
+    leds6[x6] = NAVIGATION;
+  }
 }
 int SunSensors() {
+  for (int x4=0; x4<4; x4++) {
+    leds4[x4] = NAVIGATION;
+  }
+  for (int x4=35; x4<40; x4++) {
+    leds4[x4] = NAVIGATION;
+  }
+  for (int x5 = 0; x5<4; x5++) {
+    leds5[x5] = NAVIGATION;
+  }
+  
 }
 int SPThrusters() {
 }

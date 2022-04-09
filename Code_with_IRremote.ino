@@ -283,7 +283,10 @@ int remotefunction()              // function to load IR code
   return (remote);
 }
 String remoteInterpret(String request, double remote){
-   if (remote == 13598)      {request = "POST /";}  // sleep/wake
+   if (remote == 13598){
+     if (request.startsWith("POST /6")){request = "POST /1";}  // sleep/wake
+     else {request = "POST /6";}
+   }
    else if (remote == 27399)                                        // Cycle through group 10->1->7->15
    {
      if (request.startsWith("POST /10")){request = "POST /1";}          

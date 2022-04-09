@@ -44,20 +44,22 @@ const int NAVIGATION = 0x00ffff; // BLUE
 const int SCIENCE = 0x40ff00; // GREEN
 const int COMMUNICATION = 0xffcc00; // YELLOW
 
+
 // Number of LEDs in light strip
 // set to 50 for test strip
-#define NUM_LEDS3 40 // 32 ft strands have 40 ICs
-#define NUM_LEDS4 40
-#define NUM_LEDS5 40
-#define NUM_LEDS6 40
-#define NUM_LEDS7 40
-#define NUM_LEDS8 50 // 15 ft strands have 50 ICs
+#define NUM_LEDS3 50
+#define NUM_LEDS4 50
+#define NUM_LEDS5 50
+#define NUM_LEDS6 50
+#define NUM_LEDS7 50
+#define NUM_LEDS8 50
 
 #define DATA_PIN3 3 // lighting pin for central cylinder
 #define DATA_PIN4 4 // Lighting points for other introments (pin and names adjusted later)
 #define DATA_PIN5 5 // Lighting points for other introments (pin and names adjusted later)
 #define DATA_PIN6 6 // Lighting points for other introments (pin and names adjusted later)
 #define DATA_PIN7 7 // Lighting points for other introments (pin and names adjusted later)
+#define DATA_PIN8 8 // Lighting points for other introments (pin and names adjusted later)
 
 //// Define the array of leds
 CRGB leds3[NUM_LEDS3];
@@ -65,38 +67,42 @@ CRGB leds4[NUM_LEDS4];
 CRGB leds5[NUM_LEDS5];
 CRGB leds6[NUM_LEDS6];
 CRGB leds7[NUM_LEDS7];
+CRGB leds8[NUM_LEDS8];
 
 void setup() {
+  Serial.begin(9600);
+  receiver.enableIRIn();  // IR remote
+     
+  pinMode(2, INPUT);   // hard switch that might be removed later
+     
+  // Data from CS currently planned to go over LAN connection (http web server)     
+  Ethernet.begin(mac, ip); // start ethernet connection
+  if (Ethernet.linkStatus() == LinkOFF) {
+    Serial.println("Ethernet cable is not connected.");
+  }
+  server.begin();
   
-     Serial.begin(9600);
-     receiver.enableIRIn();  // IR remote
+  Serial.print("server is at ");
+  Serial.println(Ethernet.localIP());
+    
+  FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN4>(leds4, NUM_LEDS4);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN5>(leds5, NUM_LEDS5);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN6>(leds6, NUM_LEDS6);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN7>(leds7, NUM_LEDS7);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN8>(leds8, NUM_LEDS8);
      
-     pinMode(2,  INPUT);   // hard switch that might be removed later
-     
-     // Data from CS currently planned to go over LAN connection (http web server)     
-     Ethernet.begin(mac, ip); // start ethernet connection
-     if (Ethernet.linkStatus() == LinkOFF) {
-       Serial.println("Ethernet cable is not connected.");
-     }
-     server.begin();
+  for( int x3=0; x3<40; x3++){leds3[x3] = CRGB::Black;}
+  for( int x4=0; x4<40; x4++){leds4[x4] = CRGB::Black;}
+  for( int x5=0; x5<40; x5++){leds5[x5] = CRGB::Black;}
+  for( int x6=0; x6<40; x6++){leds6[x6] = CRGB::Black;}
+  for( int x7=0; x7<40; x7++){leds7[x7] = CRGB::Black;}
+  for( int x8=0; x8<46; x8++){leds8[x8] = CRGB::Black;}
 
-     Serial.print("server is at ");
-     Serial.println(Ethernet.localIP());
-  
-     FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3);
-     FastLED.addLeds<NEOPIXEL, DATA_PIN4>(leds4, NUM_LEDS4);
-     FastLED.addLeds<NEOPIXEL, DATA_PIN5>(leds5, NUM_LEDS5);
-     FastLED.addLeds<NEOPIXEL, DATA_PIN6>(leds6, NUM_LEDS6);
-     FastLED.addLeds<NEOPIXEL, DATA_PIN7>(leds7, NUM_LEDS7);
-     
-     // pin 8 will be the signal input from the PIR snesor. When there is no
-     // movement the signal will go LOW and when movement is detected the signal
-     // will go HIGH
-     pinMode(8, INPUT);   // Pin for PIR sensor
 }
 
 int remote = 0;
-int remotefunction();
+int remotefunction(); String remoteInterpret(String reqest, double remote);
 int PIRsensor = 0;
 int DisplayMode = 0;
 
@@ -134,72 +140,211 @@ void loop() {
         }
       }
     }
-
-    //Serial.print(request); // print the request (debugging)
-
+    Serial.print(request); // print the request (debugging)
+    
+    remote = remotefunction(); // get remote codes
+    request = remoteInterpret(request, remote); // more remote nonsence
+    
     // check what has been pressed
-//    if ( request.startsWith("POST /1 ") ) { // Science Group
-//      DisplayMode = 1;
-//    }
-//    else if ( request.startsWith("POST /2") ) { // Magnetometer
-//      DisplayMode = 2;
-//    }
-//    else if ( request.startsWith("POST /3") ) { // Gamma Ray Spectrometer
-//      DisplayMode = 3;
-//    }
-//    else if ( request.startsWith("POST /4") ) { // Neutron Spectrometer
-//      DisplayMode = 4;
-//    }
-//    else if ( request.startsWith("POST /5") ) { // Multi Spectral Imagers
-//      DisplayMode = 5;
-//    }
-//    else if ( request.startsWith("POST /6") ) { // Low Gain Antenna
-//      DisplayMode = 6;
-//    }
-//    else if ( request.startsWith("POST /7") ) { // Communication Group
-//      DisplayMode = 7;
-//    }
-//    else if ( request.startsWith("POST /8") ) { // X Band HG Antenna
-//      DisplayMode = 8;
-//    }
-//    else if ( request.startsWith("POST /9") ) { // DSOC
-//      DisplayMode = 9;
-//    }
-//    else if ( request.startsWith("POST /10") ) { // Navigation Group
-//      DisplayMode = 10;
-//    }
-//    else if ( request.startsWith("POST /11") ) { // Cold Gas Thrusters A & B
-//      DisplayMode = 11;
-//    }
-//    else if ( request.startsWith("POST /12") ) { // Star Trackers
-//      DisplayMode = 12;
-//    }
-//    else if ( request.startsWith("POST /13") ) { // Sun Sensors
-//      DisplayMode = 13;
-//    }
-//    else if ( request.startsWith("POST /14") ) { // SP Thruster
-//      DisplayMode = 14;
-//    }
-//    else if ( request.startsWith("POST /15") ) { // Central Core
-//      DisplayMode = 15;
-//    }
-// place holder for receiving day/time/sleepmode data
-//    else if ( request.startsWith("POST /TIME") ) {
-//      ;
-//    }
-
+    if ( request.startsWith("POST /1 ") ) {
+      all_off();
+      for( int x7=8;  x7<13; x7++){leds7[x7] = 0x40ff00;} // Multi Spectral Imager
+      for( int x7=14; x7<19; x7++){leds7[x7] = 0x40ff00;} // Multi Spectral Imager
+      for( int x8=39; x8<45; x8++){leds8[x8] = 0x40ff00;} // Magnetometer
+      for( int x8=0;  x8<6;  x8++){leds8[x8] = 0x40ff00;} // Gamma Ray Spectrometer
+      for( int x8=6;  x8<12; x8++){leds8[x8] = 0x40ff00;} // Neutron Spectrometer
+    }
+    else if ( request.startsWith("POST /2") ) {
+      all_off();
+      for( int x8=39; x8<45; x8++){leds8[x8] = 0x40ff00;} // Magnetometer
+    }
+    else if ( request.startsWith("POST /3") ) { 
+      all_off();
+      for( int x8=0;  x8<6; x8++){leds8[x8] = 0x40ff00;} // Gamma Ray Spectrometer
+    }
+    else if ( request.startsWith("POST /4") ) {
+      all_off();
+      for( int x8=6;  x8<12; x8++){leds8[x8] = 0x40ff00;} // Neutron Spectrometer
+    }
+    else if ( request.startsWith("POST /5") ) {
+      all_off();
+      for( int x7=8;  x7<13; x7++){leds7[x7] = 0x40ff00;} // Multi Spectral Imager
+      for( int x7=14; x7<19; x7++){leds7[x7] = 0x40ff00;} // Multi Spectral Imager
+    }
+    else if ( request.startsWith("POST /6") ) {
+      all_off();
+    }
+    else if ( request.startsWith("POST /7") ) { // Communication
+      all_off();
+      for( int x5=7;  x5<40; x5++){leds5[x5] = 0xffcc00;} // DSOC
+      for( int x8=12; x8<39; x8++){leds8[x8] = 0xffbb00;} // X Band Antenna  
+    }
+    else if ( request.startsWith("POST /8") ) {
+      all_off(); 
+      for( int x8=12; x8<39; x8++){leds8[x8] = 0xffbb00;} // X Band Antenna
+    }
+    else if ( request.startsWith("POST /9") ) { // DSOC
+      all_off();
+      for( int x5=7;  x5<40; x5++){leds5[x5] = 0xffcc00;} // DSOC
+    }
+    else if ( request.startsWith("POST /10") || remote == 1) { // Navigation
+      all_off();    
+      for( int x4=15; x4<20; x4++){leds4[x4] = 0x00ffff;} // SP Thruster
+      for( int x4=21; x4<25; x4++){leds4[x4] = 0x00ffff;} // SP Thruster
+      for( int x4=6;  x4<8;  x4++){leds4[x4] = 0x00ffff;} // cold gas thruster A
+      for( int x4=31; x4<34; x4++){leds4[x4] = 0x00ffff;} // cold gas thruster A
+      for( int x6=0;  x6<3;  x6++){leds6[x6] = 0x00ffff;} // cold gas thruster A
+      for( int x6=27; x6<30; x6++){leds6[x6] = 0x00ffff;} // cold gas thruster A
+      for( int x7=0;  x7<3;  x7++){leds7[x7] = 0x00ffff;} // cold gas thruster A
+      for( int x7=25; x7<28; x7++){leds7[x7] = 0x00ffff;} // cold gas thruster A
+      for( int x6=10; x6<16; x6++){leds6[x6] = 0x00ffff;} // star trackers
+      for( int x6=18; x6<23; x6++){leds6[x6] = 0x00ffff;} // star trackers
+      for( int x4=0;  x4<4;  x4++){leds4[x4] = 0x00ffff;} // Sun Sensors
+      for( int x4=35; x4<40; x4++){leds4[x4] = 0x00ffff;} // Sun Sensors
+      for( int x5=0;  x5<4;  x5++){leds5[x5] = 0x00ffff;} // Sun Sensors
+      for( int x6=34; x6<40; x6++){leds6[x6] = 0x00ffff;} // Sun Sensors
+    }
+    else if ( request.startsWith("POST /11") ) { // Cold Gas Thrusters
+      all_off();
+      for( int x4=6;  x4<8;  x4++){leds4[x4] = 0x00ffff;} // cold gas thruster A
+      for( int x4=31; x4<34; x4++){leds4[x4] = 0x00ffff;} // cold gas thruster A
+      for( int x6=0;  x6<3;  x6++){leds6[x6] = 0x00ffff;} // cold gas thruster A
+      for( int x6=27; x6<30; x6++){leds6[x6] = 0x00ffff;} // cold gas thruster A
+      for( int x7=0;  x7<3;  x7++){leds7[x7] = 0x00ffff;} // cold gas thruster A
+      for( int x7=25; x7<28; x7++){leds7[x7] = 0x00ffff;} // cold gas thruster A
+    }
+    else if ( request.startsWith("POST /12") ) { // Star Trackers
+      all_off();
+      for( int x6=10; x6<16; x6++){leds6[x6] = 0x00ffff;} // star trackers
+      for( int x6=18; x6<23; x6++){leds6[x6] = 0x00ffff;} // star trackers
+    }
+    else if ( request.startsWith("POST /13") ) {
+      all_off();
+      for( int x4=0;  x4<4;  x4++){leds4[x4] = 0x00ffff;} // Sun Sensors
+      for( int x4=35; x4<40; x4++){leds4[x4] = 0x00ffff;} // Sun Sensors
+      for( int x5=0;  x5<4;  x5++){leds5[x5] = 0x00ffff;} // Sun Sensors
+      for( int x6=34; x6<40; x6++){leds6[x6] = 0x00ffff;} // Sun Sensors
+    } 
+    else if ( request.startsWith("POST /14") ) { // SP Thrusters
+      all_off();
+      for( int x4=15; x4<20; x4++){leds4[x4] = 0x00ffff;} // SP Thruster
+      for( int x4=21; x4<25; x4++){leds4[x4] = 0x00ffff;} // SP Thruster
+    }
+    else if ( request.startsWith("POST /15") ) { // central core, light string 1
+      all_off();
+      for( int x3=0; x3<40; x3++){leds3[x3] =CRGB::Pink;} // Central Core
+    }
+    else if ( request.startsWith("POST /0") ) {// 0 means off
+       all_off();
+    }
+    
+    // place holder for receiving day/time/sleepmode data
+    //    else if ( request.startsWith("POST /TIME") ) {
+    //      ;
+    //    }
+  
     // close the connection:
     client.stop();
     Serial.println("\nclient disconnected");
-     }
-     // -----------------------------------
-  remote = remotefunction();
-  delay(1000);
-  Serial.println(remote);
-       
-   //      IR remote decode
-   // POWER    = 13598  | sleep/wake
-   // UP       = 27399  | next group
+  }
+  // -----------------------------------   
+
+  FastLED.show();
+}
+
+int all_off(){
+  for( int x3=0; x3<40; x3++){
+    leds3[x3] = CRGB::Black;
+  }
+  for( int x4=0; x4<40; x4++){
+    leds4[x4] = CRGB::Black;
+  }
+  for( int x5=0; x5<40; x5++){
+    leds5[x5] = CRGB::Black;
+  }
+  for( int x6=0; x6<40; x6++){
+    leds6[x6] = CRGB::Black;
+  }
+  for( int x7=0; x7<40; x7++){
+    leds7[x7] = CRGB::Black;
+  }
+  for( int x8=0; x8<46; x8++){
+    leds8[x8] = CRGB::Black;
+  }
+}
+
+int remotefunction()              // function to load IR code
+{
+  if (receiver.decode(&results))
+  {
+    remote = results.value;
+    receiver.resume();
+  }
+  return (remote);
+}
+String remoteInterpret(String request, double remote){
+   if (remote == 13598)      {request = "POST /";}  // sleep/wake
+   else if (remote == 27399)                                        // Cycle through group 10->1->7->15
+   {
+     if (request.startsWith("POST /10")){request = "POST /1";}          
+     else if (request.startsWith("POST /1")){request = "POST /7";}          
+     else if (request.startsWith("POST /7")){request = "POST /15";}          
+     else if (request.startsWith("POST /15")){request = "POST /10";}          
+     else {request = "POST /10";}          
+   }
+   else if (remote == -6128)                                        // Cycle through group backward
+   {
+     if (request.startsWith("POST /15")){request = "POST /7";}          
+     else if (request.startsWith("POST /7")){request = "POST /1";}          
+     else if (request.startsWith("POST /1")){request = "POST /10";}          
+     else if (request.startsWith("POST /10")){request = "POST /15";}          
+     else {request = "POST /10";}          
+   }
+   else if (remote == 28282)                                        // Cycle through object
+   {                                                                // order 11 14 2 3 4 5 6 8 9 10 12
+     if (request.startsWith("POST /11")){request = "POST /14";}
+     else if (request.startsWith("POST /14")){request = "POST /2";}
+     else if (request.startsWith("POST /2")){request = "POST /3";}
+     else if (request.startsWith("POST /3")){request = "POST /4";}
+     else if (request.startsWith("POST /4")){request = "POST /5";}
+     else if (request.startsWith("POST /5")){request = "POST /6";}
+     else if (request.startsWith("POST /6")){request = "POST /8";}
+     else if (request.startsWith("POST /8")){request = "POST /9";}
+     else if (request.startsWith("POST /9")){request = "POST /10";}
+     else if (request.startsWith("POST /10")){request = "POST /12";}
+     else {request = "POST /11";}
+   }
+   else if (remote == 4795)                                         // Cycle through object in reverse
+   {
+     if (request.startsWith("POST /12")){request = "POST /10";}
+     else if (request.startsWith("POST /10")){request = "POST /9";}
+     else if (request.startsWith("POST /9")){request = "POST /8";}
+     else if (request.startsWith("POST /8")){request = "POST /6";}
+     else if (request.startsWith("POST /6")){request = "POST /5";}
+     else if (request.startsWith("POST /5")){request = "POST /4";}
+     else if (request.startsWith("POST /4")){request = "POST /3";}
+     else if (request.startsWith("POST /3")){request = "POST /2";}
+     else if (request.startsWith("POST /2")){request = "POST /14";}
+     else if (request.startsWith("POST /14")){request = "POST /11";}
+     else {request = "POST /11";}
+   }
+   else if (remote == -15554){request = "POST /10";} // Navigation
+   else if (remote == -22246){request = "POST /1";} // Science
+   else if (remote == -19202){request = "POST /7";} // Comunication
+   else if (remote == 5150)  {request = "POST /15";} // Structure
+   else if (remote == 20023) {request = "POST /11";} // cold gas thrusters
+   else if (remote == 30879) {request = "POST /14";} // SP Thrusters
+   else if (remote == -8326) {request = "POST /";}   // not used
+   else if (remote == 22907) {request = "POST /2";} // Magnetometer
+   else if (remote == 31102) {request = "POST /3";} // Gamma Ray Spectrometer
+   else if (remote == 7615)  {request = "POST /4";} // Neutron Spectrometer
+   else if (remote == 21462) {request = "POST /5";} // Multi Spectral Imager
+   else if (remote == 20191) {request = "POST /6";} // All Off I guess
+   else if (remote == -9574) {request = "POST /8";} // X Band Antenna
+   else if (remote == 32475) {request = "POST /9";} // DSOC
+   else if (remote == 3710)  {request = "POST /12";} // Start trackers
+   else if (remote == 7031)  {request = "POST /13";} // Sun Sensors
+   else                      {request = request;}
    // DOWN     = -6218  | previous group
    // Left     = 28282  | previous object
    // Right    = 4795   | next object
@@ -211,7 +356,7 @@ void loop() {
    // BottomR  = 30879  | SPThruster
    // remote 0 = -8326  | 
    // remote 1 = 22907  | Magnetometer
-   // remote 2 = 31102  | Gamma Ray Spectrometer
+   // remote 2 = 31102  | Gamma Ray Spectrometer Post 3
    // remote 3 = 7615   | Neutron Specctrometer
    // remote 4 = 21462  | Multi Spectral Imagers
    // remote 5 = 20191  | Low Gain Antenna
@@ -219,190 +364,5 @@ void loop() {
    // remote 7 = 32475  | DSOC Assembly
    // remote 8 = 3710   | Star Trackers
    // remote 9 = 7031   | Sun Sensors
-       
-  // TO USE INCREMENT, DECREMENT, what if we do something like request = "POST /2 "; for 1, "POST /3 "; for 2, etc ?
-  
-           // Select which lights to turn on
-           if(remote == 26775 || request.startsWith("POST /1 ")){ // Science Group
-             all_off();
-             Magnetometer();
-             GammaRay();
-             Neutron();
-             MultiSpectral();
-             LowGainAnt();
-           }
-           else if(remote == 22907 || "POST /2 "){ // Magnetometer
-             all_off();
-             Magnetometer();
-           }
-           else if(remote == 31102 || "POST /3 "){ // Gamma Ray Spectrometer
-             all_off();
-             GammaRay();
-           }
-           else if(remote == 7615 || "POST /4 "){ // Neutron Spectrometer
-             all_off();
-             Neutron();
-           }
-           else if(remote == 21462 || "POST /5 "){ // Multi Spectral Imagers
-             all_off();
-             MultiSpectral();
-           }
-           else if(remote == 20191 || "POST /6 "){ // Low Gain Antenna
-             all_off();
-             LowGainAnt();
-           }
-           else if(remote == -19202 || "POST /7 "){ // Communication Group
-             all_off();
-             XBandAnt();
-             DSOC();
-           }
-           else if(remote == -9574 || "POST /8 "){ // X Band High Gain Antenna
-             all_off();
-             XBandAnt();
-           }
-           else if(remote == 32475 || "POST /9 "){ //DSOC
-             all_off();
-             DSOC();
-           }
-           else if(DisplayMode == 9){
-           // Will plan various other modes later
-           }
-           else if(DisplayMode == 10){
-           // Will plan various other modes later
-           }
-           else if(DisplayMode == 11){
-           // Will plan various other modes later
-           }
-           else if(DisplayMode == 12){
-           // Will plan various other modes later
-           }
-           else if(DisplayMode == 13){
-           // Will plan various other modes later
-           }
-           else if(DisplayMode == 14){
-           // Will plan various other modes later
-           }
-           else if(DisplayMode == 15){
-           // Will plan various other modes later
-           }
-           else {
-             Serial.print("Something went wrong");
-           }
-           FastLED.show();
-           incrementObject(remote, request);
-           incrementGroup(remote, request);
-}
-
-int all_off()
-{
-  for( int x3=0; x3<NUM_LEDS3; x3++){
-    leds3[x3] = CRGB::Black;
-  }
-  for( int x4=0; x4<NUM_LEDS4; x4++){
-    leds4[x4] = CRGB::Black;
-  }
-  for( int x5=0; x5<NUM_LEDS5; x5++){
-    leds5[x5] = CRGB::Black;
-  }
-  for( int x6=0; x6<NUM_LEDS6; x6++){
-    leds6[x6] = CRGB::Black;
-  }
-  for( int x7=0; x7<NUM_LEDS7; x7++){
-    leds7[x7] = CRGB::Black;
-  }
-  return(1);
-}
-
-int Magnetometer() {
-  // not installed 4/6/2022
-  // color = SCIENCE
-  all_off(); // delete when actual code written;
-}
-int GammaRay() {
-  // not installed 4/6/2022
-  // color = SCIENCE
-  all_off(); // delete when actual code written;
-}
-int Neutron() {
-    // not installed 4/6/2022
-  // color = SCIENCE
-  all_off(); // delete when actual code written;
-}
-int MultiSpectral() {
-  for ( int x7 = 8; x7<13; x7++) {
-    leds7[x7] = SCIENCE;
-  }
-  for ( int x7 = 14; x7<19; x7++) {
-    leds7[x7] = SCIENCE;
-  }
-}
-int LowGainAnt() {
-    // not installed 4/6/2022
-  // color = SCIENCE
-  all_off(); // delete when actual code written;
-}
-
-int XBandAnt() {
-    // not installed 4/6/2022
-  // color = COMMUNICATION
-  all_off(); // delete when actual code written;
-}
-int DSOC() {
-  for ( int x5=7; x5<NUM_LEDS5; x5++) {
-    leds5[x5] = COMMUNICATION;
-  }
-}
-
-int ColdGasThrusters() {
-  for ( int x4 = 6; x4<8; x4++) {
-    leds4[x4] = NAVIGATION;
-  }
-  for (int x4 = 31; x4<34; x4++) {
-    leds4[x4] = NAVIGATION;
-  }
-  for (int x6 = 0; x6<3; x6++) {
-    leds6[x6] = NAVIGATION;
-  }
-  for (int x6=27; x6<30; x6++) {
-    leds6[x6] = NAVIGATION;
-  }
-  for (int x7=0; x7<3; x7++) {
-    leds7[x7] = NAVIGATION;
-  }
-  for (int x7 = 25; x7<28; x7++) {
-    leds7[x7] = NAVIGATION;
-  }
-}
-int StarTrackers() {
-  for (int x6=10; x6<16; x6++) {
-    leds6[x6] = NAVIGATION;
-  }
-  for (int x6=18; x6<23; x6++) {
-    leds6[x6] = NAVIGATION;
-  }
-}
-int SunSensors() {
-  for (int x4=0; x4<4; x4++) {
-    leds4[x4] = NAVIGATION;
-  }
-  for (int x4=35; x4<40; x4++) {
-    leds4[x4] = NAVIGATION;
-  }
-  for (int x5 = 0; x5<4; x5++) {
-    leds5[x5] = NAVIGATION;
-  }
-  
-}
-int SPThrusters() {
-}
-
-
-int remotefunction()              // function to load IR code
-{
-  if (receiver.decode(&results))
-  {
-    remote = results.value;
-    receiver.resume();
-  }
-  return (remote);
+   return request;
 }

@@ -111,7 +111,7 @@ void loop() {
   // ---------- http webserver ------------------
   // listen for incoming clients
   EthernetClient client = server.available();
-  if (client) {
+  if (client || receiver.decode(&results)) {
     // an http request ends with a blank line
     boolean currentLineIsBlank = true;
     String request = ""; // holds request string
@@ -120,7 +120,7 @@ void loop() {
       if (client.available()) {
         char c = client.read();
         request = request + c; 
-
+          
         // if you've gotten to the end of the line (received a newline
         // character) and the line is blank, the http request has ended,
         // so you can send a reply
@@ -140,11 +140,11 @@ void loop() {
         }
       }
     }
-    Serial.print(request); // print the request (debugging)
     
-    remote = remotefunction(); // get remote codes
+    remote  = remotefunction(); // get remote codes
+    Serial.println(remote);
     request = remoteInterpret(request, remote); // more remote nonsence
-    
+    Serial.print(request); // print the request (debugging)
     // check what has been pressed
     if ( request.startsWith("POST /1 ") ) {
       all_off();
@@ -275,12 +275,40 @@ int all_off(){
 
 int remotefunction()              // function to load IR code
 {
-  if (receiver.decode(&results))
+  while
+    (
+    results.value!= 13598||results.value!= 27399||results.value!=111111||
+    results.value!=-6218 ||results.value!=28282 ||results.value!=4795  ||
+    results.value!=-15554||results.value!=-22246||results.value!=-19202|| 
+    results.value!=5150  ||results.value!=20023 ||results.value!=30879 ||
+    results.value!=-8326 ||results.value!=22907 ||results.value!=31102 ||
+    results.value!=7615  ||results.value!=21462 ||results.value!=20191 ||
+    results.value!=-9574 ||results.value!=32475 ||results.value!=3710  ||
+    results.value!=7031  
+    )
   {
-    remote = results.value;
-    receiver.resume();
+    if (receiver.decode(&results))
+    {
+      receiver.resume();
+      Serial.print("The remote code in the loop = ");
+      Serial.println(results.value);
+      if(
+        results.value== 13598||results.value== 27399||results.value==111111||
+        results.value==-6218 ||results.value==28282 ||results.value==4795  ||
+        results.value==-15554||results.value==-22246||results.value==-19202|| 
+        results.value==5150  ||results.value==20023 ||results.value==30879 ||
+        results.value==-8326 ||results.value==22907 ||results.value==31102 ||
+        results.value==7615  ||results.value==21462 ||results.value==20191 ||
+        results.value==-9574 ||results.value==32475 ||results.value==3710  ||
+        results.value==7031
+        )
+      {
+        Serial.print("The remote code being sent from the function = ");
+        Serial.println(results.value);
+        return results.value;
+      }
+    }
   }
-  return (remote);
 }
 String remoteInterpret(String request, double remote){
    if (remote == 13598){
@@ -351,16 +379,16 @@ String remoteInterpret(String request, double remote){
    // DOWN     = -6218  | previous group
    // Left     = 28282  | previous object
    // Right    = 4795   | next object
-   // TOPL     = -15554 | Navigation
+   // TOPL     = -15554 | Navigation 
    // TOPR     = -22246 | Science
    // BotR     = -19202 | Comunication
    // BotL     = 5150   | Structure
    // BottomL  = 20023  | Cold Gas Thruster
    // BottomR  = 30879  | SPThruster
-   // remote 0 = -8326  | 
+   // remote 0 = -8326  | central cylinder
    // remote 1 = 22907  | Magnetometer
    // remote 2 = 31102  | Gamma Ray Spectrometer Post 3
-   // remote 3 = 7615   | Neutron Specctrometer
+   // remote 3 = 7615   | Neutron Specctrometer         
    // remote 4 = 21462  | Multi Spectral Imagers
    // remote 5 = 20191  | Low Gain Antenna
    // remote 6 = -9574  | X-Band High Gain Antenna

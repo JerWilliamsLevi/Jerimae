@@ -30,9 +30,12 @@
 #include <Ethernet.h>
 
 // ---------- LAN setup info
-byte mac[] = { 0xA9, 0xB9, 0xC9, 0xD9, 0xE9, 0xF9 }; // MAC address
-IPAddress ip(192, 168, 0, 32);  // IP (depends on local network)
-EthernetServer server(8224); // initialize with port 8224
+// FQDN: WIZnetD9E9F9.istb4.dhcp.asu.edu
+// DNS () :
+//    129.219.13.81, 129.219.17.5, 129.219.17.200
+
+byte mac[] = { 0x00, 0x25, 0xCA, 0xD9, 0xE9, 0xF9 }; // MAC address
+EthernetServer server(80); // initialize with port 8224
 
 // Set up for IR Remote
 const int RECV_PIN = 12;
@@ -75,15 +78,20 @@ void setup() {
      
   pinMode(2, INPUT);   // hard switch that might be removed later
      
+  pinMode(11, OUTPUT); // reset pin for ethernet
+  
   // Data from CS currently planned to go over LAN connection (http web server)     
-  Ethernet.begin(mac, ip); // start ethernet connection
-  if (Ethernet.linkStatus() == LinkOFF) {
-    Serial.println("Ethernet cable is not connected.");
-  }
+  Ethernet.init(10);
+  digitalWrite(11, LOW);
+  delay(500); 
+  digitalWrite(11, HIGH);
+  Ethernet.begin(mac);
   server.begin();
   
   Serial.print("server is at ");
   Serial.println(Ethernet.localIP());
+  Serial.print("gateway ip is ");
+  Serial.println(Ethernet.gatewayIP());
     
   FastLED.addLeds<NEOPIXEL, DATA_PIN3>(leds3, NUM_LEDS3);
   FastLED.addLeds<NEOPIXEL, DATA_PIN4>(leds4, NUM_LEDS4);
@@ -110,6 +118,7 @@ void loop() {
        
   // ---------- http webserver ------------------
   // listen for incoming clients
+  Ethernet.maintain();
   EthernetClient client = server.available();
   if (client || receiver.decode(&results)) {
     // an http request ends with a blank line

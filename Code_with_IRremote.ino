@@ -110,8 +110,8 @@ void setup() {
 }
 
 int remote = 0;
-int remotefunction(); String remoteInterpret(String request, double remote);
-int PIRsensor = 0;
+int remotefunction(int remote); String remoteInterpret(String request, double remote);
+int getcode(); int PIRsensor = 0;
 int DisplayMode = 0;
 
 void loop() {
@@ -120,7 +120,7 @@ void loop() {
   // listen for incoming clients
   Ethernet.maintain();
   EthernetClient client = server.available();
-  if (client){// || receiver.decode(&results)) {
+  if (client || receiver.decode(&results)) {
     // an http request ends with a blank line
     boolean currentLineIsBlank = true;
     String request = ""; // holds request string
@@ -149,11 +149,22 @@ void loop() {
         }
       }
     }
-    remote = 0;
-    remote  = remotefunction(); // get remote codes
-    Serial.println(remote);
+	
+	
+	
+    if(receiver.decode(&results))
+    {
+      remote = remotefunction();
+      receiver.resume();
+      Serial.println(remote);
+      //delay(5000);
+    }
+    //Serial.println(receiver.decode(&results));
     request = remoteInterpret(request, remote); // more remote nonsence
     Serial.print(request); // print the request (debugging)
+	
+	
+	
     // check what has been pressed
     if ( request.startsWith("POST /1 ") ) {
       all_off();
@@ -282,44 +293,23 @@ int all_off(){
   }
 }
 
-int remotefunction()              // function to load IR code
-{
-  while
-    (
-    remote!= 13598||remote!= 27399||remote!=111111||
-    remote!=-6218 ||remote!=28282 ||remote!=4795  ||
-    remote!=-15554||remote!=-22246||remote!=-19202|| 
-    remote!=5150  ||remote!=20023 ||remote!=30879 ||
-    remote!=-8326 ||remote!=22907 ||remote!=31102 ||
-    remote!=7615  ||remote!=21462 ||remote!=20191 ||
-    remote!=-9574 ||remote!=32475 ||remote!=3710  ||
-    remote!=7031 
-    )
-  {
-    if (receiver.decode(&results))
-    {
-      receiver.resume();
+int remotefunction(){
+  remote = 0;
+  while( remote!= 13598&&remote!= 27399&&remote!=111101&&
+         remote!=-6218 &&remote!=28282 &&remote!=4795  &&
+         remote!=-15554&&remote!=-22246&&remote!=-19202&& 
+         remote!=5150  &&remote!=20023 &&remote!=30879 &&
+         remote!=-8326 &&remote!=22907 &&remote!=31102 &&
+         remote!=7615  &&remote!=21462 &&remote!=20191 &&
+         remote!=-9574 &&remote!=32475 &&remote!=3710  &&
+         remote!=7031) {
+    if(receiver.decode(&results)){
       remote = results.value;
-      Serial.print("The remote code in the loop = ");
-      Serial.println(results.value);
-      if(
-        remote== 13598||remote== 27399||remote==111111||
-        remote==-6218 ||remote==28282 ||remote==4795  ||
-        remote==-15554||remote==-22246||remote==-19202|| 
-        remote==5150  ||remote==20023 ||remote==30879 ||
-        remote==-8326 ||remote==22907 ||remote==31102 ||
-        remote==7615  ||remote==21462 ||remote==20191 ||
-        remote==-9574 ||remote==32475 ||remote==3710  ||
-        remote==7031  || remote == 0
-        )
-      {
-        
-        Serial.print("The remote code being sent from the function = ");
-        Serial.println(remote);
-        return remote;
-      }
+      receiver.resume();
+      //Serial.println(remote); 
     }
   }
+  return remote;
 }
 
 String remoteInterpret(String request, double remote){

@@ -367,7 +367,7 @@ String remoteInterpret(String request, double remote){
    else if (remote == 5150)  {request = "POST /15";} // Structure
    else if (remote == 20023) {request = "POST /11";} // cold gas thrusters
    else if (remote == 30879) {request = "POST /14";} // SP Thrusters
-   else if (remote == -8326) {request = "POST /";}   // not used
+   else if (remote == -8326) {request = "POST /15";}   // Central cylendar
    else if (remote == 22907) {request = "POST /2";} // Magnetometer
    else if (remote == 31102) {request = "POST /3";} // Gamma Ray Spectrometer
    else if (remote == 7615)  {request = "POST /4";} // Neutron Spectrometer

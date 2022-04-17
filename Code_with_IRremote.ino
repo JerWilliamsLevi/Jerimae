@@ -295,7 +295,7 @@ int all_off(){
 
 int remotefunction(){
   remote = 0;
-  while( remote!= 13598&&remote!= 27399&&remote!=111101&&
+  while( remote!= 13598&&remote!= 27399&&remote!=-11233&&
          remote!=-6218 &&remote!=28282 &&remote!=4795  &&
          remote!=-15554&&remote!=-22246&&remote!=-19202&& 
          remote!=5150  &&remote!=20023 &&remote!=30879 &&
@@ -377,10 +377,15 @@ String remoteInterpret(String request, double remote){
    else if (remote == 32475) {request = "POST /9";} // DSOC
    else if (remote == 3710)  {request = "POST /12";} // Start trackers
    else if (remote == 7031)  {request = "POST /13";} // Sun Sensors
+   else if (remote == -11233){request = "POST /15";} // Eventually Demo Mode
    else                      {request = request;}
+	 //      IR remote decode
+   // POWER    = 13598  | sleep/wake
+   // UP       = 27399  | next group
    // DOWN     = -6218  | previous group
    // Left     = 28282  | previous object
    // Right    = 4795   | next object
+   // Middle   = -11233 | Demo Mode
    // TOPL     = -15554 | Navigation 
    // TOPR     = -22246 | Science
    // BotR     = -19202 | Comunication
